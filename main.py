@@ -58,10 +58,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_start.setStyleSheet('background-color:#1AFD9C')
         self.ui.pushButton_start.setStyleSheet('font-size:25px')
 
+        #Stop_button
+        self.ui.pushButton_stop.setText('stop')
+        self.ui.pushButton_stop.clicked.connect(self.pushButton_stop)
+        self.ui.pushButton_stop.setStyleSheet('background-color:#1AFD9C')
+        self.ui.pushButton_stop.setStyleSheet('font-size:25px')
+
         #pushButton_forword
         self.ui.pushButton_forword.setCheckable(True)
         self.ui.pushButton_forword.clicked[bool].connect(self.button_forword)
-        self.ui.pushButton_forword.setText('forword')
+        self.ui.pushButton_forword.setText('X+')
         self.ui.pushButton_forword.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_forword.setStyleSheet('font-size:18px')
 
@@ -69,25 +75,31 @@ class MainWindow(QtWidgets.QMainWindow):
         #self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
         # pushButton_left
-        self.ui.pushButton_left.setText('left')
+        self.ui.pushButton_left.setCheckable(True)
+        self.ui.pushButton_left.clicked[bool].connect(self.button_left)
+        self.ui.pushButton_left.setText('Y+')
         self.ui.pushButton_left.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_left.setStyleSheet('font-size:18px')
         # action
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
         #pushButton_right
-        self.ui.pushButton_right.setText('right')
+        self.ui.pushButton_right.setText('Y-')
         self.ui.pushButton_right.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_right.setStyleSheet('font-size:18px')
+        self.ui.pushButton_right.setCheckable(True)
+        self.ui.pushButton_right.clicked[bool].connect(self.button_rigth)
 
         # action
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
 
         #pushButton_back
-        self.ui.pushButton_back.setText('back')
+        self.ui.pushButton_back.setText('X-')
         self.ui.pushButton_back.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_back.setStyleSheet('font-size:18px')
+        self.ui.pushButton_back.setCheckable(True)
+        self.ui.pushButton_back.clicked[bool].connect(self.button_back)
         # action
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
@@ -210,8 +222,6 @@ class MainWindow(QtWidgets.QMainWindow):
     def sliderValue_speed(self):
         self.ui.progressBar_speed.setValue(self.ui.horizontalSlider_speed.value())
 
-    def sliderValue_distance(self):
-        self.ui.progressBar_distance.setValue(self.ui.horizontalSlider_distance.value())
 
     def dialValue_speed(self):
         self.ui.progressBar_speed.setValue(self.ui.dial_speed.value())
@@ -235,6 +245,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 
+    def pushButton_stop(self):
+        stoping_jog()
 
     def butten_reset(self):
         print('homing')
@@ -242,11 +254,44 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def button_forword(self,pressed):
         if pressed:
-            J1_JOG()
-            print('forword')
+            X_JOG()
+            self.ui.pushButton_forword.setText('X+')
+            print('X+')
         else:
             stoping_jog()
-            print('stop jog')
+            #self.ui.pushButton_forword.setText('J1-')
+            print('stoping')
+
+    def button_left(self,pressed):
+        if pressed:
+            Y_JOG()
+            print('Y+')
+            self.ui.pushButton_left.setText('Y+')
+        else:
+            stoping_jog()
+            print('stoping')
+            #self.ui.pushButton_left.setText('J2-')
+    def button_rigth(self,pressed):
+        if pressed:
+            Y_GOJC()
+            print('Y-')
+            self.ui.pushButton_right.setText('J3+')
+        else:
+            stoping_jog()
+            print('stoping')
+            #self.ui.pushButton_right.setText('J3+')
+
+    def button_back(self,pressed):
+        if pressed:
+            X_GOJC()
+            print('X-')
+            self.ui.pushButton_right.setText('X-')
+        else:
+            stoping_jog()
+            print('stoping')
+
+
+
 
 
 def start_servo():
@@ -257,25 +302,35 @@ def close_servo():
     rc = c.write_single_register(0x6,0x00)
     rc = c.write_single_register(0x7,0x00)
     print(rc)
-def J1_JOG():
-    rc = c.write_single_register(0x0300,425)
-def J1_GOJC():
-    rc = c.write_single_register(0x0300,426)
-def J2_JOG():
-    rc = c.write_single_register(0x0300,427)
-def J2_GOJC():
-    rc = c.write_single_register(0x0300,428)
-def J3_JOG():
-    rc = c.write_single_register(0x0300,429)
-def J3_GOJC():
-    rc = c.write_single_register(0x0300,430)
-def J4_JOG():
-    rc = c.write_single_register(0x0300,431)
-def J4_GOJC():
-    rc = c.write_single_register(0x0300,432)
+def X_JOG():
+    rc = c.write_single_register(0x0300,601)
+def X_GOJC():
+    rc = c.write_single_register(0x0300,602)
+def Y_JOG():
+    rc = c.write_single_register(0x0300,603)
+def Y_GOJC():
+    rc = c.write_single_register(0x0300,604)
+def Z_JOG():
+    rc = c.write_single_register(0x0300,605)
+def Z_GOJC():
+    rc = c.write_single_register(0x0300,606)
+def RX_JOG():
+    rc = c.write_single_register(0x0300,607)
+def RX_GOJC():
+    rc = c.write_single_register(0x0300,608)
+def RY_JOG():
+    rc = c.write_single_register(0x0300,609)
+def RY_GOJC():
+    rc = c.write_single_register(0x0300,610)
+def RZ_JOG():
+    rc = c.write_single_register(0x0300,611)
+def RZ_GOJC():
+    rc = c.write_single_register(0x0300,612)
 
+'''1405全軸回到機械原點'''
 def homing_orgin():
     rc = c.write_single_register(0x0300,1405)
+'''0停止運作'''
 def stoping_jog():
 
     rc = c.write_single_register(0x0300,0x0000)
