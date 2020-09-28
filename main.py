@@ -59,9 +59,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_start.setStyleSheet('font-size:25px')
 
         #pushButton_forword
+        self.ui.pushButton_forword.setCheckable(True)
+        self.ui.pushButton_forword.clicked[bool].connect(self.button_forword)
         self.ui.pushButton_forword.setText('forword')
         self.ui.pushButton_forword.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_forword.setStyleSheet('font-size:18px')
+
         #action
         #self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
@@ -217,39 +220,67 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.progressBar_distance.setValue(self.ui.dial_distance.value())
 
     def pushButton_start(self,pressed):
+
         source=self.sender()
-        result=str(123456)
+        #result=str(123456)
         if pressed:
             self.ui.pushButton_start.setText('ON')
-            self.ui.label_xo.setText(result)
+            start_servo()
+            print('ON')
+
         else:
             self.ui.pushButton_start.setText('OFF')
+            close_servo()
+            print('OFF')
 
 
 
 
     def butten_reset(self):
-        print("reset!")
+        print('homing')
+        homing_orgin()
 
-def runrobot():
-    rc=c.write_single_register(0x6,0x101)
-    print(rc)
-    rc = c.write_single_register(0x7, 0x101)
-    print(rc)
+    def button_forword(self,pressed):
+        if pressed:
+            J1_JOG()
+            print('forword')
+        else:
+            stoping_jog()
+            print('stop jog')
 
-    time.sleep(1)
-    print('start 425')
-    rc = c.write_single_register(0x300,425)
-    time.sleep(10)
-    print('stop!')
-    rc = c.write_single_register(0x300,1000)
-    time.sleep(1)
-    print('start 426')
-    rc = c.write_single_register(0x300, 426)
-    time.sleep(10)
-    print('stop!')
-    rc = c.write_single_register(0x300, 1000)
-    time.sleep(1)
+
+def start_servo():
+    rc = c.write_single_register(0x6,0x101)
+    rc = c.write_single_register(0x7,0x101)
+    print(rc)
+def close_servo():
+    rc = c.write_single_register(0x6,0x00)
+    rc = c.write_single_register(0x7,0x00)
+    print(rc)
+def J1_JOG():
+    rc = c.write_single_register(0x0300,425)
+def J1_GOJC():
+    rc = c.write_single_register(0x0300,426)
+def J2_JOG():
+    rc = c.write_single_register(0x0300,427)
+def J2_GOJC():
+    rc = c.write_single_register(0x0300,428)
+def J3_JOG():
+    rc = c.write_single_register(0x0300,429)
+def J3_GOJC():
+    rc = c.write_single_register(0x0300,430)
+def J4_JOG():
+    rc = c.write_single_register(0x0300,431)
+def J4_GOJC():
+    rc = c.write_single_register(0x0300,432)
+
+def homing_orgin():
+    rc = c.write_single_register(0x0300,1405)
+def stoping_jog():
+
+    rc = c.write_single_register(0x0300,0x0000)
+
+
 
 
 
@@ -261,4 +292,4 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
-    runrobot()
+    #runrobot()
