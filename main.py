@@ -14,12 +14,14 @@ c = ModbusClient(auto_open=True)
 c.host(SERVER_HOST)
 c.unit_id(SERVER_U_ID)
 c.open()
+cap = cv2.VideoCapture(1)
 
 class MainWindow(QtWidgets.QMainWindow):
 
 
     def __init__(self):
         super(MainWindow, self).__init__()
+        
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         #set icon
@@ -36,6 +38,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
         #seting progressBar
+
         self.ui.progressBar_speed.setMinimum(0)
         self.ui.progressBar_speed.setMaximum(99)
         self.ui.progressBar_speed.setValue(0)
@@ -48,6 +51,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.dial_speed.setRange(0, 100)
         self.ui.dial_speed.setNotchesVisible(True)
         self.ui.dial_speed.valueChanged.connect(self.dialValue_speed)
+
+        '''伺服異警重置'''
+        #reAlarm_button
+        self.ui.pushButton_reAlarm.clicked.connect(self.button_reAlarm)
+        self.ui.pushButton_reAlarm.setText('REALARM')
+        self.ui.pushButton_reAlarm.setStyleSheet("background-color:#ADADAD;")
+        self.ui.pushButton_reAlarm.setStyleSheet('font-size:12px')
 
 
         #start_button
@@ -104,16 +114,21 @@ class MainWindow(QtWidgets.QMainWindow):
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
         #pushButton_up
-        self.ui.pushButton_up.setText('up')
+
+        self.ui.pushButton_up.setText('Z+')
         self.ui.pushButton_up.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_up.setStyleSheet('font-size:18px')
+        self.ui.pushButton_up.setCheckable(True)
+        self.ui.pushButton_up.clicked[bool].connect(self.button_up)
         # action
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
         #pushButton_down
-        self.ui.pushButton_down.setText('down')
+        self.ui.pushButton_down.setText('Z-')
         self.ui.pushButton_down.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_down.setStyleSheet('font-size:18px')
+        self.ui.pushButton_down.setCheckable(True)
+        self.ui.pushButton_down.clicked[bool].connect(self.button_down)
         # action
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
@@ -121,6 +136,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_rz1.setText('-')
         self.ui.pushButton_rz1.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_rz1.setStyleSheet('font-size:30px')
+        self.ui.pushButton_rz1.setCheckable(True)
+        self.ui.pushButton_rz1.clicked[bool].connect(self.pushButton_rz1)
         # action
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
@@ -128,6 +145,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_rz2.setText('+')
         self.ui.pushButton_rz2.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_rz2.setStyleSheet('font-size:30px')
+        self.ui.pushButton_rz2.setCheckable(True)
+        self.ui.pushButton_rz2.clicked[bool].connect(self.pushButton_rz2)
         #self.ui.pushButton_rz2.setStyleSheet('border-radius:10px;')
         # action
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
@@ -220,11 +239,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.label_rzi.setFont(QtGui.QFont('Arial', 15))
 
     def sliderValue_speed(self):
-        self.ui.progressBar_speed.setValue(self.ui.horizontalSlider_speed.value())
-
+        velocity = self.ui.horizontalSlider_speed.value()
+        self.ui.progressBar_speed.setValue(velocity)
+        rc = c.write_single_register(0x0324,velocity)
+        print(velocity)
 
     def dialValue_speed(self):
-        self.ui.progressBar_speed.setValue(self.ui.dial_speed.value())
+        velocity1 = self.ui.dial_speed.value()
+        self.ui.progressBar_speed.setValue(velocity1)
+        print(velocity1)
+        rc = c.write_single_register(0x0324,velocity1)
 
     def dialValue_distance(self):
         self.ui.progressBar_distance.setValue(self.ui.dial_distance.value())
@@ -271,6 +295,7 @@ class MainWindow(QtWidgets.QMainWindow):
             stoping_jog()
             print('stoping')
             #self.ui.pushButton_left.setText('J2-')
+
     def button_rigth(self,pressed):
         if pressed:
             Y_GOJC()
@@ -289,6 +314,39 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             stoping_jog()
             print('stoping')
+
+    def button_up(self,pressed):
+        if pressed:
+            Z_JOG()
+            print('RX+')
+        else:
+            stoping_jog()
+            print('stoping')
+
+    def button_down(self,pressed):
+
+        if pressed:
+            Z_GOJC()
+        else:
+            stoping_jog()
+
+    def pushButton_rz1(self,pressed):
+        if pressed:
+            RZ_GOJC()
+        else:
+            stoping_jog()
+
+    def pushButton_rz2(self,pressed):
+
+        if pressed:
+            RZ_JOG()
+        else:
+            stoping_jog()
+
+    def button_reAlarm(self):
+            reset_Alarm()
+
+
 
 
 
@@ -334,6 +392,12 @@ def homing_orgin():
 def stoping_jog():
 
     rc = c.write_single_register(0x0300,0x0000)
+
+def reset_Alarm():
+
+    rc = c.write_single_register(0x0180,0x01)
+
+
 
 
 
