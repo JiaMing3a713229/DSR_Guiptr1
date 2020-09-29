@@ -21,7 +21,10 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self):
         super(MainWindow, self).__init__()
-        
+        '''設定carema'''
+        self.timer_camera = QtCore.QTimer()
+        self.cap = cv2.VideoCapture()
+        self.timer_camera.timeout.connect(self.show_camera)
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
         #set icon
@@ -347,9 +350,15 @@ class MainWindow(QtWidgets.QMainWindow):
             reset_Alarm()
 
 
+    '''9/29更改'''
+    def show_camera(self):
+        flag, self.image = self.cap.read()  # 从视频流中读取
 
-
-
+        show = cv2.resize(self.image, (640, 480))  # 把读到的帧的大小重新设置为 640x480
+        show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)  # 视频色彩转换回RGB，这样才是现实的颜色
+        showImage = QtGui.QImage(show.data, show.shape[1], show.shape[0],
+                                 QtGui.QImage.Format_RGB888)  # 把读取到的视频数据变成QImage形式
+        self.label_show_camera.setPixmap(QtGui.QPixmap.fromImage(showImage))  # 往显示视频的Label里 显示QImage
 
 
 def start_servo():
