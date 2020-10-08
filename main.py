@@ -6,7 +6,9 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from pyqt5.pyqt5first import Ui_MainWindow
 import sys
 
-SERVER_HOST = "127.0.1.1"
+
+#SERVER_HOST = "127.0.1.1"
+SERVER_HOST = "192.168.1.1"
 SERVER_U_ID = 2
 c = ModbusClient(auto_open=True)
 
@@ -24,7 +26,7 @@ class MainWindow(QtWidgets.QMainWindow):
         '''設定carema'''
 
         self.timer_camera = QtCore.QTimer()
-        self.cap = cv2.VideoCapture(1)
+        self.cap = cv2.VideoCapture(0)
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -268,7 +270,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def pushButton_start(self,pressed):
 
-        source=self.sender()
+        #source=self.sender()
         #result=str(123456)
         if pressed:
             self.ui.pushButton_start.setText('ON')
@@ -313,7 +315,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if pressed:
             Y_GOJC()
             print('Y-')
-            self.ui.pushButton_right.setText('J3+')
+            #self.ui.pushButton_right.setText('')
         else:
             stoping_jog()
             print('stoping')
@@ -364,7 +366,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def show_camera(self):
         flag, self.image = self.cap.read()  # 从视频流中读取
 
-        show = cv2.resize(self.image, (481, 351))  # 把读到的帧的大小重新设置为 640x480
+        show = cv2.resize(self.image, (481, 351))  # 把读到的帧的大小重新设置为 481*351
         show = cv2.cvtColor(show, cv2.COLOR_BGR2RGB)  # 视频色彩转换回RGB，这样才是现实的颜色
         showImage = QtGui.QImage(show.data, show.shape[1], show.shape[0],
                                  QtGui.QImage.Format_RGB888)  # 把读取到的视频数据变成QImage形式
@@ -376,7 +378,7 @@ class MainWindow(QtWidgets.QMainWindow):
             if flag == False:  # flag表示open()成不成功
                 msg = QtWidgets.QMessageBox.warning(self, 'warning', "請檢查相機是否連接正確", buttons=QtWidgets.QMessageBox.Ok)
             else:
-                self.timer_camera.start(50)  # 定时器开始计时30ms，结果是每过30ms从摄像头中取一帧显示
+                self.timer_camera.start(100)  # 定时器开始计时30ms，结果是每过30ms从摄像头中取一帧显示
                 self.ui.open_button.setText('關閉相機')
         else:
             self.timer_camera.stop()  # 关闭定时器
@@ -430,6 +432,33 @@ def reset_Alarm():
 
     rc = c.write_single_register(0x0180,0x01)
 
+def reading_position():
+    a = np.array(65536)
+    x1 = c.read_holding_registers(0xf0, 1)
+    x2 = c.read_holding_registers(0xf1, 1)
+
+    y1 = c.read_holding_registers(0xf2, 1)
+    y2 = c.read_holding_registers(0xf3, 1)
+
+    z1 = c.read_holding_registers(0xf4, 1)
+    z2 = c.read_holding_registers(0xf5, 1)
+
+    rx1 = c.read_holding_registers(0xf6, 1)
+    rx2 = c.read_holding_registers(0xf7, 1)
+
+    ry1 = c.read_holding_registers(0xf8, 1)
+    ry2 = c.read_holding_registers(0xf9, 1)
+
+    rz1 = c.read_holding_registers(0xfA, 1)
+    rz2 = c.read_holding_registers(0xfB, 1)
+
+    x = ((a * x2) + x1) / 1000
+    y = ((a * y2) + y1) / 1000
+    z = ((a * z2) + z1) / 1000
+    rx = ((a * rx2) + rx1) / 1000
+    ry = ((a * ry2) + ry1) / 1000
+    rz = ((a * rz2) + rz1) / 1000
+
 
 
 
@@ -444,5 +473,6 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()
+
     sys.exit(app.exec_())
     #runrobot()
