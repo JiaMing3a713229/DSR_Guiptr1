@@ -42,7 +42,10 @@ z=((a*z2)+z1)/1000
 rx=((a*rx2)+rx1)/1000
 ry=((a*ry2)+ry1)/1000
 rz=((a*rz2)+rz1)/1000
-
-data = c.write_single_register(0x1100,12)
+print(x)
+print(y)
+print(z)
+print(rz)
+data = c.write_single_register(0x1100,5)
 data = c.read_holding_registers(0x1100,1)
 print(data)
