@@ -1,7 +1,7 @@
 from pyModbusTCP.client import ModbusClient
 import time
 import cv2
-import  numpy as np
+import numpy as np
 from PyQt5 import QtWidgets, QtGui, QtCore
 from pyqt5.pyqt5first import Ui_MainWindow
 import sys
@@ -10,6 +10,7 @@ import sys
 #SERVER_HOST = "127.0.1.1"
 SERVER_HOST = "192.168.1.1"
 SERVER_U_ID = 2
+a = np.array(65536)
 c = ModbusClient(auto_open=True)
 
 
@@ -215,32 +216,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.label_rxo.setStyleSheet("color:#FFFFFF;")
         self.ui.label_rxo.setFont(QtGui.QFont('Arial', 15))
 
-        self.ui.label_rx.setText('RX:')
+        self.ui.label_rx.setText('RZ:')
         self.ui.label_rx.setStyleSheet('font-size:30px')
         self.ui.label_rx.setStyleSheet("color:#FFFFFF;")
         self.ui.label_rx.setFont(QtGui.QFont('Arial', 15))
 
-        '''label RY axis'''
-        self.ui.label_ryo.setText('')
-        self.ui.label_ryo.setStyleSheet('font-size:30px')
-        self.ui.label_ryo.setStyleSheet("color:#FFFFFF;")
-        self.ui.label_ryo.setFont(QtGui.QFont('Arial', 15))
 
-        self.ui.label_ry.setText('RY:')
-        self.ui.label_ry.setStyleSheet('font-size:30px')
-        self.ui.label_ry.setStyleSheet("color:#FFFFFF;")
-        self.ui.label_ry.setFont(QtGui.QFont('Arial', 15))
 
-        '''label RZ axis'''
-        self.ui.label_rz2.setText('')
-        self.ui.label_rz2.setStyleSheet('font-size:30px')
-        self.ui.label_rz2.setStyleSheet("color:#FFFFFF;")
-        self.ui.label_rz2.setFont(QtGui.QFont('Arial', 15))
 
-        self.ui.label_rzi.setText('RX:')
-        self.ui.label_rzi.setStyleSheet('font-size:30px')
-        self.ui.label_rzi.setStyleSheet("color:#FFFFFF;")
-        self.ui.label_rzi.setFont(QtGui.QFont('Arial', 15))
+        #pushbutton_dispos
+        self.ui.pushButton_dispos.setText('更新')
+        self.ui.pushButton_dispos.setStyleSheet('font-size:25px')
+        self.ui.pushButton_dispos.setStyleSheet("background-color:#E0E0E0;")
+        #self.ui.pushButton_dispos.clicked.connect(self.pushbutton_dispos)
 
         #open button
         self.ui.open_button.setText('open')
@@ -362,6 +350,7 @@ class MainWindow(QtWidgets.QMainWindow):
             reset_Alarm()
 
 
+
     '''9/29更改'''
     def show_camera(self):
         flag, self.image = self.cap.read()  # 从视频流中读取
@@ -389,13 +378,17 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.open_button.setText('打開相機')
 
 
+
+
 def start_servo():
-    rc = c.write_single_register(0x6,0x101)
-    rc = c.write_single_register(0x7,0x101)
+    rc = c.write_single_register(0x6,0x0101)
+    print(rc)
+    rc = c.write_single_register(0x7,0x0101)
     print(rc)
 def close_servo():
-    rc = c.write_single_register(0x6,0x00)
-    rc = c.write_single_register(0x7,0x00)
+    rc = c.write_single_register(0x6,0x0000)
+    print(rc)
+    rc = c.write_single_register(0x7,0x0000)
     print(rc)
 def X_JOG():
     rc = c.write_single_register(0x0300,601)
@@ -434,32 +427,9 @@ def reset_Alarm():
 
     rc = c.write_single_register(0x0180,0x01)
 
-def reading_position():
-    a = np.array(65536)
-    x1 = c.read_holding_registers(0xf0, 1)
-    x2 = c.read_holding_registers(0xf1, 1)
 
-    y1 = c.read_holding_registers(0xf2, 1)
-    y2 = c.read_holding_registers(0xf3, 1)
 
-    z1 = c.read_holding_registers(0xf4, 1)
-    z2 = c.read_holding_registers(0xf5, 1)
-
-    rx1 = c.read_holding_registers(0xf6, 1)
-    rx2 = c.read_holding_registers(0xf7, 1)
-
-    ry1 = c.read_holding_registers(0xf8, 1)
-    ry2 = c.read_holding_registers(0xf9, 1)
-
-    rz1 = c.read_holding_registers(0xfA, 1)
-    rz2 = c.read_holding_registers(0xfB, 1)
-
-    x = ((a * x2) + x1) / 1000
-    y = ((a * y2) + y1) / 1000
-    z = ((a * z2) + z1) / 1000
-    rx = ((a * rx2) + rx1) / 1000
-    ry = ((a * ry2) + ry1) / 1000
-    rz = ((a * rz2) + rz1) / 1000
+#def read_position():
 
 
 
@@ -471,10 +441,38 @@ def reading_position():
 
 
 if __name__ == "__main__":
+    a = np.array(65536)
     cap = cv2.VideoCapture(0)
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()
+
+    #x1 = c.read_holding_registers(0xf0, 1)
+    x2 = c.read_holding_registers(0xf0, 2)
+
+    #y1 = c.read_holding_registers(0xf2, 1)
+    y2 = c.read_holding_registers(0xf2, 2)
+
+    #z1 = c.read_holding_registers(0xf4, 1)
+    z2 = c.read_holding_registers(0xf4, 2)
+
+    #rx1 = c.read_holding_registers(0xf6, 1)
+    #rx2 = c.read_holding_registers(0xf6, 2)
+
+    #ry1 = c.read_holding_registers(0xf8, 1)
+    #ry2 = c.read_holding_registers(0xf9, 2)
+
+    #rz1 = c.read_holding_registers(0xfA, 1)
+    rz2 = c.read_holding_registers(0xfa, 2)
+    #x = ((a * x2) + x1) / 1000
+    #y = ((a * y2) + y1) / 1000
+    #z = ((a * z2) + z1) / 1000
+    #rx = ((a * rx2) + rx1) / 1000
+    #ry = ((a * ry2) + ry1) / 1000
+    rz = ((a * rz2[1]) + rz2[0]) / 1000
+    print(rz)
+
+
 
     sys.exit(app.exec_())
     #runrobot()
