@@ -228,7 +228,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_dispos.setText('更新')
         self.ui.pushButton_dispos.setStyleSheet('font-size:25px')
         self.ui.pushButton_dispos.setStyleSheet("background-color:#E0E0E0;")
-        #self.ui.pushButton_dispos.clicked.connect(self.pushbutton_dispos)
+        self.ui.pushButton_dispos.clicked.connect(self.pushbutton_dispos)
 
         #open button
         self.ui.open_button.setText('open')
@@ -376,7 +376,18 @@ class MainWindow(QtWidgets.QMainWindow):
             self.cap.release()  # 释放视频流
             self.ui.Capture.clear()  # 清空视频显示区域
             self.ui.open_button.setText('打開相機')
+    def pushbutton_dispos(self):
+        #read_position()
+        x,y,z,rz=read_position()
+        self.ui.label_xo.setText(str(x))
+        self.ui.label_yo.setText(str(y))
+        self.ui.label_zo.setText(str(z))
+        self.ui.label_rxo.setText(str(rz))
 
+        print(x)
+        print(y)
+        print(z)
+        print(rz)
 
 
 
@@ -429,7 +440,29 @@ def reset_Alarm():
 
 
 
-#def read_position():
+def read_position():
+
+    x2 = c.read_holding_registers(0xf0, 2)
+    if x2 == None:
+        x2 = c.read_holding_registers(0xf0, 2)
+
+    y2 = c.read_holding_registers(0xf2, 2)
+    if y2 == None:
+        y2 = c.read_holding_registers(0xf2, 2)
+
+    z2 = c.read_holding_registers(0xf4, 2)
+    if z2 == None:
+        z2 = c.read_holding_registers(0xf4, 2)
+
+    rz2 = c.read_holding_registers(0xfa, 2)
+    if rz2 == None:
+        rz2 = c.read_holding_registers(0xfa, 2)
+
+    x = ((a * x2[1]) + x2[0]) / 1000
+    y = ((a * y2[1]) + y2[0]) / 1000
+    z = ((a * z2[1]) + z2[0]) / 1000
+    rz = ((a * rz2[1]) + rz2[0]) / 1000
+    return x,y,z,rz
 
 
 
@@ -447,30 +480,8 @@ if __name__ == "__main__":
     window = MainWindow()
     window.show()
 
-    #x1 = c.read_holding_registers(0xf0, 1)
-    x2 = c.read_holding_registers(0xf0, 2)
 
-    #y1 = c.read_holding_registers(0xf2, 1)
-    y2 = c.read_holding_registers(0xf2, 2)
 
-    #z1 = c.read_holding_registers(0xf4, 1)
-    z2 = c.read_holding_registers(0xf4, 2)
-
-    #rx1 = c.read_holding_registers(0xf6, 1)
-    #rx2 = c.read_holding_registers(0xf6, 2)
-
-    #ry1 = c.read_holding_registers(0xf8, 1)
-    #ry2 = c.read_holding_registers(0xf9, 2)
-
-    #rz1 = c.read_holding_registers(0xfA, 1)
-    rz2 = c.read_holding_registers(0xfa, 2)
-    #x = ((a * x2) + x1) / 1000
-    #y = ((a * y2) + y1) / 1000
-    #z = ((a * z2) + z1) / 1000
-    #rx = ((a * rx2) + rx1) / 1000
-    #ry = ((a * ry2) + ry1) / 1000
-    rz = ((a * rz2[1]) + rz2[0]) / 1000
-    print(rz)
 
 
 
