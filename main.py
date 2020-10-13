@@ -27,7 +27,7 @@ class MainWindow(QtWidgets.QMainWindow):
         '''設定carema'''
 
         self.timer_camera = QtCore.QTimer()
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(-1)
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
@@ -365,7 +365,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def button_open_camera_clicked(self):
         if self.timer_camera.isActive() == False:  # 若定时器未启动
-            flag = self.cap.open(0)  # 参数是0，表示打开笔记本的内置摄像头，参数是视频文件路径则打开视频
+            flag = self.cap.open(1)  # 参数是0，表示打开笔记本的内置摄像头，参数是视频文件路径则打开视频
             if flag == False:  # flag表示open()成不成功
                 msg = QtWidgets.QMessageBox.warning(self, 'warning', "請檢查相機是否連接正確", buttons=QtWidgets.QMessageBox.Ok)
             else:
@@ -393,9 +393,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
 def start_servo():
     rc = c.write_single_register(0x6,0x0101)
-    print(rc)
+    rc = c.write_single_register(0x6,0x0101)
     rc = c.write_single_register(0x7,0x0101)
-    print(rc)
+    rc = c.write_single_register(0x7,0x0101)
 def close_servo():
     rc = c.write_single_register(0x6,0x0000)
     print(rc)
@@ -475,7 +475,7 @@ def read_position():
 
 if __name__ == "__main__":
     a = np.array(65536)
-    cap = cv2.VideoCapture(0)
+    #cap = cv2.VideoCapture(1)
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()
@@ -486,4 +486,3 @@ if __name__ == "__main__":
 
 
     sys.exit(app.exec_())
-    #runrobot()
