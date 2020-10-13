@@ -400,32 +400,6 @@ border-radius: 10px;  border: 2px groove gray;</string>
      <string>TextLabel</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="open_button">
-    <property name="geometry">
-     <rect>
-      <x>550</x>
-      <y>390</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="close_button">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>390</y>
-      <width>101</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
    <widget class="QPushButton" name="pushButton_dispos">
     <property name="geometry">
      <rect>

@@ -147,12 +147,6 @@ class Ui_MainWindow(object):
         self.Capture.setFrameShadow(QtWidgets.QFrame.Raised)
         self.Capture.setLineWidth(7)
         self.Capture.setObjectName("Capture")
-        self.open_button = QtWidgets.QPushButton(self.centralwidget)
-        self.open_button.setGeometry(QtCore.QRect(550, 390, 101, 31))
-        self.open_button.setObjectName("open_button")
-        self.close_button = QtWidgets.QPushButton(self.centralwidget)
-        self.close_button.setGeometry(QtCore.QRect(670, 390, 101, 31))
-        self.close_button.setObjectName("close_button")
         self.pushButton_dispos = QtWidgets.QPushButton(self.centralwidget)
         self.pushButton_dispos.setGeometry(QtCore.QRect(350, 280, 91, 41))
         self.pushButton_dispos.setObjectName("pushButton_dispos")
@@ -195,8 +189,6 @@ class Ui_MainWindow(object):
         self.pushButton_stop.setText(_translate("MainWindow", "PushButton"))
         self.pushButton_reAlarm.setText(_translate("MainWindow", "PushButton"))
         self.Capture.setText(_translate("MainWindow", "TextLabel"))
-        self.open_button.setText(_translate("MainWindow", "PushButton"))
-        self.close_button.setText(_translate("MainWindow", "PushButton"))
         self.pushButton_dispos.setText(_translate("MainWindow", "PushButton"))
 
 
