@@ -47,14 +47,16 @@ class MainWindow(QtWidgets.QMainWindow):
         # MainWindow Title
         self.setWindowTitle('台達電SCARA人機介面')
         ##
-        self.timer_camera.timeout.connect(self.change_pic)
-        self.timer.start(1000)  # 啟動 Timer .. 每隔1000ms 會觸發 run
+        self.ui.Capture.setScaledContents(True)
+
 
         #計時
 
         #GUI內部程式開始
+        self.timer_camera.timeout.connect(self.change_pic)
+        self.timer_camera.start(1000)  # 啟動 Timer .. 每隔1000ms 會觸發 run
         #self.ui.Capture.setPixmap(QPixmap("D:/Desktop/result/red.jpg"))
-        self.ui.Capture.setScaledContents(True)
+
         #QtWidgets.QApplication.processEvents()
         #seting progressBar
 
@@ -537,7 +539,7 @@ if __name__ == "__main__":
 
     #frame=improve_brightness(frame)
 
-    frame = cv2.resize(frame, (400, 300))
+    #frame = cv2.resize(frame, (400, 300))
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
     hsv = cv2.GaussianBlur(hsv, (11, 11), 0)
 
@@ -619,8 +621,8 @@ if __name__ == "__main__":
 
 
 
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    #cv2.waitKey(0)
+    #cv2.destroyAllWindows()
     
 
     sys.exit(app.exec_())

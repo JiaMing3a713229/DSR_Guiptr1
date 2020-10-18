@@ -38,7 +38,7 @@ border: 2px groove gray;</string>
       <x>640</x>
       <y>470</y>
       <width>371</width>
-      <height>102</height>
+      <height>131</height>
      </rect>
     </property>
     <layout class="QGridLayout" name="gridLayout_2">
@@ -51,9 +51,6 @@ border: 2px groove gray;</string>
         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; color:#ffffff;&quot;&gt;speed&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
-     </item>
-     <item row="0" column="1" rowspan="3">
-      <widget class="QDial" name="dial_speed"/>
      </item>
      <item row="1" column="0">
       <widget class="QProgressBar" name="progressBar_speed">
@@ -69,6 +66,16 @@ border: 2px groove gray;</string>
       <widget class="QSlider" name="horizontalSlider_speed">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="confirm">
+       <property name="styleSheet">
+        <string notr="true">font: 75 10pt &quot;Microsoft YaHei&quot;;</string>
+       </property>
+       <property name="text">
+        <string>PushButton</string>
        </property>
       </widget>
      </item>
@@ -405,6 +412,32 @@ border-radius: 10px;  border: 2px groove gray;</string>
      <rect>
       <x>350</x>
       <y>280</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="open_button">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>390</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="close_button">
+    <property name="geometry">
+     <rect>
+      <x>650</x>
+      <y>390</y>
       <width>91</width>
       <height>41</height>
      </rect>

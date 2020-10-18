@@ -27,58 +27,58 @@ class MainWindow(QtWidgets.QMainWindow):
         '''設定carema'''
 
         self.timer_camera = QtCore.QTimer()
-        self.cap = cv2.VideoCapture(0)
+        self.cap = cv2.VideoCapture(1)
 
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        #set icon
+        '''set icon'''
         self.setWindowIcon(QtGui.QIcon('icon/ncuticon.png'))
         palette = QtGui.QPalette()
         palette.setBrush(self.backgroundRole(), QtGui.QColor(79, 79, 79))
         self.setPalette(palette)
 
-        # MainWindow Title
+        '''MainWindow Title'''
         self.setWindowTitle('台達電SCARA人機介面')
-        ##
+        #設定計時器動作show_camera
         self.timer_camera.timeout.connect(self.show_camera)
 
         #seting progressBar
-
         self.ui.progressBar_speed.setMinimum(0)
         self.ui.progressBar_speed.setMaximum(99)
         self.ui.progressBar_speed.setValue(0)
-
-        #display speed & distance value
+        '''顯示速度的數值'''
+        #display speed  value
         self.ui.horizontalSlider_speed.valueChanged.connect(self.sliderValue_speed)
 
-
+        '''旋鈕調整伺服速度'''
         # Dial_speed
-        self.ui.dial_speed.setRange(0, 100)
-        self.ui.dial_speed.setNotchesVisible(True)
-        self.ui.dial_speed.valueChanged.connect(self.dialValue_speed)
+        #self.ui.dial_speed.setRange(0, 100)
+        #self.ui.dial_speed.setNotchesVisible(True)
+        #self.ui.dial_speed.valueChanged.connect(self.dialValue_speed)
 
         '''伺服異警重置'''
         #reAlarm_button
-        self.ui.pushButton_reAlarm.clicked.connect(self.button_reAlarm)
+
         self.ui.pushButton_reAlarm.setText('REALARM')
         self.ui.pushButton_reAlarm.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_reAlarm.setStyleSheet('font-size:12px')
+        self.ui.pushButton_reAlarm.clicked.connect(self.button_reAlarm)
 
 
         #start_button
-
+        '''伺服啟動'''
         self.ui.pushButton_start.setText('OFF')
         self.ui.pushButton_start.setCheckable(True)
         self.ui.pushButton_start.clicked[bool].connect(self.pushButton_start)
         self.ui.pushButton_start.setStyleSheet('background-color:#1AFD9C')
         self.ui.pushButton_start.setStyleSheet('font-size:25px')
-
+        '''伺服停止'''
         #Stop_button
         self.ui.pushButton_stop.setText('stop')
         self.ui.pushButton_stop.clicked.connect(self.pushButton_stop)
         self.ui.pushButton_stop.setStyleSheet('background-color:#1AFD9C')
         self.ui.pushButton_stop.setStyleSheet('font-size:25px')
-
+        '''X座標+'''
         #pushButton_forword
         self.ui.pushButton_forword.setCheckable(True)
         self.ui.pushButton_forword.clicked[bool].connect(self.button_forword)
@@ -86,48 +86,41 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_forword.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_forword.setStyleSheet('font-size:18px')
 
-        #action
-        #self.ui.pushButton_start.clicked.connect(self.pushButton_start)
-
+        '''Y座標+'''
         # pushButton_left
         self.ui.pushButton_left.setCheckable(True)
         self.ui.pushButton_left.clicked[bool].connect(self.button_left)
         self.ui.pushButton_left.setText('Y+')
         self.ui.pushButton_left.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_left.setStyleSheet('font-size:18px')
-        # action
-        # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
-        #pushButton_right
+        '''Y座標-'''
         self.ui.pushButton_right.setText('Y-')
         self.ui.pushButton_right.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_right.setStyleSheet('font-size:18px')
         self.ui.pushButton_right.setCheckable(True)
         self.ui.pushButton_right.clicked[bool].connect(self.button_rigth)
 
-        # action
-        # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
-
+        '''X座標+'''
         #pushButton_back
         self.ui.pushButton_back.setText('X-')
         self.ui.pushButton_back.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_back.setStyleSheet('font-size:18px')
         self.ui.pushButton_back.setCheckable(True)
         self.ui.pushButton_back.clicked[bool].connect(self.button_back)
-        # action
-        # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
+
+        '''Z座標+'''
         #pushButton_up
-
         self.ui.pushButton_up.setText('Z+')
         self.ui.pushButton_up.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_up.setStyleSheet('font-size:18px')
         self.ui.pushButton_up.setCheckable(True)
         self.ui.pushButton_up.clicked[bool].connect(self.button_up)
-        # action
-        # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
+
+        ''' Z座標-'''
         #pushButton_down
         self.ui.pushButton_down.setText('Z-')
         self.ui.pushButton_down.setStyleSheet("background-color:#ADADAD;")
@@ -137,6 +130,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # action
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
+        '''Z旋轉-'''
         #pushButton_rz1
         self.ui.pushButton_rz1.setText('-')
         self.ui.pushButton_rz1.setStyleSheet("background-color:#ADADAD;")
@@ -145,25 +139,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.pushButton_rz1.clicked[bool].connect(self.pushButton_rz1)
         # action
         # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
-
+        '''Z旋轉+'''
         #pushButton_rz2
         self.ui.pushButton_rz2.setText('+')
         self.ui.pushButton_rz2.setStyleSheet("background-color:#ADADAD;")
         self.ui.pushButton_rz2.setStyleSheet('font-size:30px')
         self.ui.pushButton_rz2.setCheckable(True)
         self.ui.pushButton_rz2.clicked[bool].connect(self.pushButton_rz2)
-        #self.ui.pushButton_rz2.setStyleSheet('border-radius:10px;')
-        # action
-        # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
 
+        '''伺服重置'''
         # pushButton_reset
         self.ui.pushButton_reset.setText('reset')
         self.ui.pushButton_reset.setStyleSheet("background-color:#02C874;")
         self.ui.pushButton_reset.setStyleSheet('font-size:25px')
 
         self.ui.pushButton_reset.clicked.connect(self.butten_reset)
-        # action
-        # self.ui.pushButton_start.clicked.connect(self.pushButton_start)
+
 
         #label_Z
         self.ui.label_Z.setText('     Z')
@@ -223,38 +214,49 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 
-
+        '''更新座標數據'''
         #pushbutton_dispos
         self.ui.pushButton_dispos.setText('更新')
         self.ui.pushButton_dispos.setStyleSheet('font-size:25px')
         self.ui.pushButton_dispos.setStyleSheet("background-color:#E0E0E0;")
         self.ui.pushButton_dispos.clicked.connect(self.pushbutton_dispos)
-
+        '''開啟相機'''
         #open button
         self.ui.open_button.setText('open')
         self.ui.open_button.setStyleSheet('font-size:25px')
         self.ui.open_button.setStyleSheet("background-color:#E0E0E0;")
         self.ui.open_button.clicked.connect(self.button_open_camera_clicked)
+        '''關閉相機'''
         #close button
         self.ui.close_button.setText('close')
         self.ui.close_button.setStyleSheet('font-size:25px')
         self.ui.close_button.setStyleSheet("background-color:#E0E0E0;")
-        self.ui.close_button.clicked.connect(self.close)  # 若该按键被点击，则调用close()，注意这个close是父类QtWidgets.QWidget自带的，会关闭程序
+        #若該按鍵被按，則調用close()，請注意這個close弒父類Qtwidght.QWidget自帶的，會關閉程序
+        self.ui.close_button.clicked.connect(self.close)
+
+        #speed_confirm button
+        self.ui.confirm.setText('確認')
+        self.ui.confirm.setStyleSheet('font-size:25px')
+        self.ui.confirm.setStyleSheet("background-color:#E0E0E0;")
+        self.ui.confirm.clicked.connect(self.speed_confirm)
 
     def sliderValue_speed(self):
         velocity = self.ui.horizontalSlider_speed.value()
         self.ui.progressBar_speed.setValue(velocity)
-        rc = c.write_single_register(0x0324,velocity)
+        #rc = c.write_single_register(0x0324,velocity)
         print(velocity)
+    def speed_confirm(self):
+        velocity = self.ui.horizontalSlider_speed.value()
+        rc = c.write_single_register(0x0324, velocity)
+        print(velocity)
+    #def dialValue_speed(self):
+    #    velocity1 = self.ui.dial_speed.value()
+    #    self.ui.progressBar_speed.setValue(velocity1)
+    #    print(velocity1)
+    #    rc = c.write_single_register(0x0324,velocity1)
 
-    def dialValue_speed(self):
-        velocity1 = self.ui.dial_speed.value()
-        self.ui.progressBar_speed.setValue(velocity1)
-        print(velocity1)
-        rc = c.write_single_register(0x0324,velocity1)
-
-    def dialValue_distance(self):
-        self.ui.progressBar_distance.setValue(self.ui.dial_distance.value())
+    #def dialValue_distance(self):
+    #    self.ui.progressBar_distance.setValue(self.ui.dial_distance.value())
 
     def pushButton_start(self,pressed):
 
@@ -353,54 +355,79 @@ class MainWindow(QtWidgets.QMainWindow):
 
     '''9/29更改'''
     def show_camera(self):
-        flag, self.image = self.cap.read()  # 从视频流中读取
-
-        show = cv2.resize(self.image, (481, 351))  # 把读到的帧的大小重新设置为 481*351
-
-        show = cv2.cvtColor(show, cv2.COLOR_RGB2BGR)  # 视频色彩转换回RGB，这样才是现实的颜色
-
+        '''從視頻中讀取'''
+        flag, self.image = self.cap.read()
+        '''把讀取到的大小重新設置為481*351'''
+        show = cv2.resize(self.image, (481, 351))
+        '''視頻色彩轉回RGB'''
+        show = cv2.cvtColor(show, cv2.COLOR_RGB2BGR)
+        '''把讀取到的視頻數據變成QImage形式'''
         showImage = QtGui.QImage(show.data, show.shape[1], show.shape[0],
-                                 QtGui.QImage.Format_RGB888)  # 把读取到的视频数据变成QImage形式
-        self.ui.Capture.setPixmap(QtGui.QPixmap.fromImage(showImage))  # 往显示视频的Label里 显示QImage
+                                 QtGui.QImage.Format_RGB888)
+        '''往Label顯示視頻'''
+        self.ui.Capture.setPixmap(QtGui.QPixmap.fromImage(showImage))
+        '''-------------------------------------------------------'''
+        x, y, z, rz = read_position()
+        '''將X、Y、Z、RZ數據顯示在Label上'''
+        self.ui.label_xo.setText(str(x)+'mm')
+        self.ui.label_yo.setText(str(y)+'mm')
+        self.ui.label_zo.setText(str(z)+'mm')
+        self.ui.label_rxo.setText(str(rz)+'deg')
 
     def button_open_camera_clicked(self):
-        if self.timer_camera.isActive() == False:  # 若定时器未启动
-            flag = self.cap.open(1)  # 参数是0，表示打开笔记本的内置摄像头，参数是视频文件路径则打开视频
+        '''若定時器未啟動'''
+        if self.timer_camera.isActive() == False:
+            '''參數0，表示打開USB的鏡頭'''
+            '''參數1，表示打開筆電的鏡頭'''
+            flag = self.cap.open(0)
             if flag == False:  # flag表示open()成不成功
                 msg = QtWidgets.QMessageBox.warning(self, 'warning', "請檢查相機是否連接正確", buttons=QtWidgets.QMessageBox.Ok)
             else:
-                self.timer_camera.start(100)  # 定时器开始计时30ms，结果是每过30ms从摄像头中取一帧显示
+                '''定時器設置為100ms，每300ms更新一次'''
+                self.timer_camera.start(300)
                 self.ui.open_button.setText('關閉相機')
         else:
-            self.timer_camera.stop()  # 关闭定时器
-            self.cap.release()  # 释放视频流
-            self.ui.Capture.clear()  # 清空视频显示区域
+            '''關閉定時器'''
+            self.timer_camera.stop()
+            '''釋放視頻流'''
+            self.cap.release()
+            '''清空視頻顯示區域'''
+            self.ui.Capture.clear()
+
             self.ui.open_button.setText('打開相機')
+
     def pushbutton_dispos(self):
+
         #read_position()
         x,y,z,rz=read_position()
-        self.ui.label_xo.setText(str(x))
-        self.ui.label_yo.setText(str(y))
-        self.ui.label_zo.setText(str(z))
-        self.ui.label_rxo.setText(str(rz))
+        '''將X、Y、Z、RZ數據顯示在Label上'''
+        self.ui.label_xo.setText(str(x)+'mm')
+        self.ui.label_yo.setText(str(y)+'mm')
+        self.ui.label_zo.setText(str(z)+'mm')
+        self.ui.label_rxo.setText(str(rz)+' deg ')
 
         print(x)
         print(y)
         print(z)
         print(rz)
 
-
-
+def read_servo_speed():
+    rc =c.read_holding_registers(0x0324,1)
+    print('speed:'+rc)
+'''開啟伺服'''
 def start_servo():
     rc = c.write_single_register(0x6,0x0101)
     rc = c.write_single_register(0x6,0x0101)
     rc = c.write_single_register(0x7,0x0101)
     rc = c.write_single_register(0x7,0x0101)
+'''關閉伺服'''
 def close_servo():
     rc = c.write_single_register(0x6,0x0000)
     print(rc)
     rc = c.write_single_register(0x7,0x0000)
     print(rc)
+
+'''動作指令'''
 def X_JOG():
     rc = c.write_single_register(0x0300,601)
 def X_GOJC():
@@ -433,13 +460,16 @@ def homing_orgin():
 def stoping_jog():
 
     rc = c.write_single_register(0x0300,0x0000)
-
+'''預警重置'''
 def reset_Alarm():
 
-    rc = c.write_single_register(0x0180,0x01)
+    #rc = c.write_single_register(0x0180,0x01)
+    rc = c.write_single_register(0x0026, 0x001)
+    rc = c.write_single_register(0x0026, 0x100)
+    rc = c.write_single_register(0x0027, 0x001)
+    rc = c.write_single_register(0x0027, 0x100)
 
-
-
+'''取得座標位置'''
 def read_position():
 
     x2 = c.read_holding_registers(0xf0, 2)
@@ -475,7 +505,6 @@ def read_position():
 
 if __name__ == "__main__":
     a = np.array(65536)
-    #cap = cv2.VideoCapture(1)
     app = QtWidgets.QApplication(sys.argv)
     window = MainWindow()
     window.show()

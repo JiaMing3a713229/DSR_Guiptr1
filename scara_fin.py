@@ -1,9 +1,19 @@
 import cv2
 import numpy as np
 import time
-
+from pyModbusTCP.client import ModbusClient
 cap = cv2.VideoCapture(0)
 time.sleep(2)
+SERVER_HOST = "192.168.1.1"
+SERVER_U_ID = 2
+a = np.array(65536)
+c = ModbusClient(auto_open=True)
+
+
+c.host(SERVER_HOST)
+c.unit_id(SERVER_U_ID)
+c.open()
+
 
 '''width，height縮放大小'''
 def get_picture(width,heigth):
@@ -132,21 +142,25 @@ if __name__ == '__main__':
             if length == 6:
                 cv2.putText(frame, "Hexagon", (x, y+30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
                 print('Hexagon')
+                rc = c.write_single_register(0x1100,6)
+
                 #動作
                 print(length)
             elif length == 4:
                 cv2.putText(frame, "Rectangle", (x, y+30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0))
                 print('Rectangle')
+                rc = c.write_single_register(0x1100, 4)
                 print(length)
 
             elif length == 3:
                 cv2.putText(frame, "Triangle", (x, y+30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0))
                 print('Triangle')
+                rc = c.write_single_register(0x1100, 3)
                 print(length)
 
             cv2.imshow('roi',roi)
 
-
+    #rc = c.read_holding_registers(0x1100, 1)
     cv2.imshow("frame", frame)
     cv2.imwrite("D:/Desktop/result/red.jpg", mask)
 
