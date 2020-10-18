@@ -69,17 +69,17 @@ if __name__ == '__main__':
     #frame=cv2.imread('D:/Desktop/result/test10.jpg')
 
 
-    #frame=improve_brightness(frame)
-
+    frame=improve_brightness(frame)
+    '''原始圖'''
+    cv2.imshow('origine',frame)
     #frame = cv2.resize(frame, (400, 300))
     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
 
     '''高斯模糊'''
     hsv = cv2.GaussianBlur(hsv, (11, 11), 0)
-
+    cv2.imshow('GaussianBlur', hsv)
     '''hsv 二值化'''
     mask = cv2.inRange(hsv, lower, upper)
-
     cv2.imshow('inrange',mask)
 
     #cv2.imwrite("D:/Desktop/result/red.jpg", mask)
@@ -88,13 +88,12 @@ if __name__ == '__main__':
     kernel = np.ones((5, 5), np.uint8)
     '''二值化侵蝕'''
     mask = cv2.erode(mask, kernel, iterations=2)
-    #cv2.imshow('erode', mask)
+    cv2.imshow('erode', mask)
 
     kernel = np.ones((5, 5), np.uint8)
     '''二值化膨脹'''
     mask = cv2.dilate(mask, kernel, iterations=2)
-
-    cv2.imshow('mask',mask)
+    cv2.imshow('dilate',mask)
     contours, hierarchy = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     '''如果輪廓大於0則進行動作'''
@@ -138,29 +137,32 @@ if __name__ == '__main__':
             length = (len(approx_result))
             print(length)
             result=length
-            print(result)
+            #print(result)
             if length == 6:
                 cv2.putText(frame, "Hexagon", (x, y+30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0))
                 print('Hexagon')
                 rc = c.write_single_register(0x1100,6)
-
+                rc = c.write_single_register(0x1101,1)
                 #動作
-                print(length)
+                #print(length)
             elif length == 4:
                 cv2.putText(frame, "Rectangle", (x, y+30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0))
                 print('Rectangle')
                 rc = c.write_single_register(0x1100, 4)
-                print(length)
+                rc = c.write_single_register(0x1101, 1)
+                #print(length)
 
             elif length == 3:
                 cv2.putText(frame, "Triangle", (x, y+30), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0))
                 print('Triangle')
                 rc = c.write_single_register(0x1100, 3)
-                print(length)
-
+                #print(length)
+                rc = c.write_single_register(0x1101, 1)
             cv2.imshow('roi',roi)
 
-    #rc = c.read_holding_registers(0x1100, 1)
+    rc = c.read_holding_registers(0x1100, 1)
+    rc = c.read_holding_registers(0x1101, 1)
+    print(rc)
     cv2.imshow("frame", frame)
     cv2.imwrite("D:/Desktop/result/red.jpg", mask)
 
